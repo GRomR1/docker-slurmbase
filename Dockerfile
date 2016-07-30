@@ -3,13 +3,23 @@ MAINTAINER Ole Weidner <ole.weidner@ed.ac.uk>
 
 ENV SLURM_VER=16.05.3
 
+# Create users, set up SSH keys (for MPI)
 RUN useradd -u 2001 -d /home/slurm slurm
 RUN useradd -u 6000 -ms /bin/bash ddhpc
+ADD etc/sudoers.d/ddhpc /etc/sudoers.d/ddhpc
+ADD home/ddhpc/ssh/config /home/ddhpc/.ssh/config
+ADD home/ddhpc/ssh/id_rsa /home/ddhpc/.ssh/id_rsa
+ADD home/ddhpc/ssh/id_rsa.pub /home/ddhpc/.ssh/id_rsa.pub
+ADD home/ddhpc/ssh/authorized_keys /home/ddhpc/.ssh/authorized_keys
+RUN chown -R ddhpc:ddhpc /home/ddhpc/.ssh/
+RUN chmod 400 /home/ddhpc/.ssh/*
 
+# Install packages
 RUN apt-get update && apt-get -y  dist-upgrade
 RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
     libmunge-dev libmunge2 lua5.3 lua5.3-dev  libopenmpi-dev openmpi-bin \
-    gfortran vim python-mpi4py python-numpy openssh-server openssh-client
+    gfortran vim python-mpi4py python-numpy python-psutil sudo psmisc \
+    openssh-server openssh-client
 
 
 # Download, compile and install SLURM
@@ -24,8 +34,7 @@ ADD etc/slurm/slurm.conf /usr/local/etc/slurm.conf
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo 'ddhpc:ddhpc' | chpasswd
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ADD etc/supervisord.d/sshd.conf /etc/supervisor/conf.d/sshd.conf
