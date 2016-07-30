@@ -3,8 +3,9 @@ FROM ubuntu:16.04
 ENV SLURM_VER=16.05.3
 
 RUN apt-get update && apt-get -y  dist-upgrade
-RUN apt-get install -y munge curl gcc make bzip2 supervisor python libmunge-dev \
-    libmunge2 lua5.3 lua5.3-dev  libopenmpi-dev openmpi-bin gfortran
+RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
+    libmunge-dev libmunge2 lua5.3 lua5.3-dev  libopenmpi-dev openmpi-bin \
+    gfortran vim python-mpi4py python-numpy
 
 RUN curl -fsL http://www.schedmd.com/download/total/slurm-${SLURM_VER}.tar.bz2 | tar xfj - -C /opt/ && \
     cd /opt/slurm-${SLURM_VER}/ && \
