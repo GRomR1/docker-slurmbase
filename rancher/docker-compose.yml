@@ -1,0 +1,28 @@
+slurmctld:
+  environment:
+    SLURM_CLUSTER_NAME: ddhpc
+    SLURM_CONTROL_MACHINE: slurmctld
+    SLURM_NODE_NAMES: slurmd_[1-4]
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: nodetype=utility
+  tty: true
+  hostname: slurmctld
+  image: datadrivenhpc/slurmctld:latest
+  links:
+  - slurmd:SLURM_NODES
+  stdin_open: true
+  
+slurmd:
+  environment:
+    SLURM_CONTROL_MACHINE: slurmctld
+    SLURM_CLUSTER_NAME: ddhpc
+    SLURM_NODE_NAMES: slurmd_[1-4]
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: nodetype=cluster
+    io.rancher.container.hostname_override: container_name
+  tty: true
+  hostname: slurmd
+  image: datadrivenhpc/slurmd
+  stdin_open: true
