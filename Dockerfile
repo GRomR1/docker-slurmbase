@@ -17,9 +17,9 @@ RUN chmod 400 /home/ddhpc/.ssh/*
 # Install packages
 RUN apt-get update && apt-get -y  dist-upgrade
 RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
-    libmunge-dev libmunge2 lua5.3 lua5.3-dev  libopenmpi-dev openmpi-bin \
+    libmunge-dev libmunge2 lua5.3 lua5.3-dev libopenmpi-dev openmpi-bin \
     gfortran vim python-mpi4py python-numpy python-psutil sudo psmisc \
-    openssh-server openssh-client glusterfs-server
+    iputils-ping openssh-server openssh-client glusterfs-server
 
 
 # Download, compile and install SLURM
