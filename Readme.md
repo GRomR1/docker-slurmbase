@@ -21,7 +21,7 @@ The Docker SLURM cluster is configured with the following software packages:
 
 ## Launch a New SLURM cluster
 
-> If you are using Rancher, you can check out the compose files in the 
+> If you are using Rancher, you can check out the compose files in the
 > `rancher` subdirecotry.  
 
 Create a new directory with a `docker-compose.yml` file:

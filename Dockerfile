@@ -19,7 +19,7 @@ RUN apt-get update && apt-get -y  dist-upgrade
 RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
     libmunge-dev libmunge2 lua5.3 lua5.3-dev  libopenmpi-dev openmpi-bin \
     gfortran vim python-mpi4py python-numpy python-psutil sudo psmisc \
-    openssh-server openssh-client
+    openssh-server openssh-client glusterfs-server
 
 
 # Download, compile and install SLURM
@@ -38,6 +38,11 @@ RUN echo 'ddhpc:ddhpc' | chpasswd
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ADD etc/supervisord.d/sshd.conf /etc/supervisor/conf.d/sshd.conf
+
+
+# Configure GlusterFS
+RUN mkdir -p /data/ddhpc
+ADD etc/supervisord.d/glusterd.conf /etc/supervisor/conf.d/glusterd.conf
 
 
 # Configure munge (for SLURM authentication)
