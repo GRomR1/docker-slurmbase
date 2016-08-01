@@ -19,7 +19,8 @@ RUN apt-get update && apt-get -y  dist-upgrade
 RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
     libmunge-dev libmunge2 lua5.3 lua5.3-dev libopenmpi-dev openmpi-bin \
     gfortran vim python-mpi4py python-numpy python-psutil sudo psmisc \
-    iputils-ping openssh-server openssh-client glusterfs-server
+    software-properties-common python-software-properties iputils-ping \
+    openssh-server openssh-client
 
 
 # Download, compile and install SLURM
@@ -41,6 +42,10 @@ ADD etc/supervisord.d/sshd.conf /etc/supervisor/conf.d/sshd.conf
 
 
 # Configure GlusterFS
+RUN add-apt-repository ppa:gluster/glusterfs-3.8 && \
+    apt-get update -y && \
+    apt-get install -y glusterfs-server
+
 RUN mkdir -p /data/ddhpc
 ADD etc/supervisord.d/glusterd.conf /etc/supervisor/conf.d/glusterd.conf
 
