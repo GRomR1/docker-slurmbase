@@ -42,12 +42,12 @@ ADD etc/supervisord.d/sshd.conf /etc/supervisor/conf.d/sshd.conf
 
 
 # Configure GlusterFS
-RUN add-apt-repository ppa:gluster/glusterfs-3.8 && \
-    apt-get update -y && \
-    apt-get install -y glusterfs-server
-
-RUN mkdir -p /data/ddhpc
-ADD etc/supervisord.d/glusterd.conf /etc/supervisor/conf.d/glusterd.conf
+# RUN add-apt-repository ppa:gluster/glusterfs-3.8 && \
+#     apt-get update -y && \
+#     apt-get install -y glusterfs-server
+#
+# RUN mkdir -p /data/ddhpc
+# ADD etc/supervisord.d/glusterd.conf /etc/supervisor/conf.d/glusterd.conf
 
 
 # Configure munge (for SLURM authentication)
