@@ -32,9 +32,6 @@ runs an SSH server for accessing the cluster.
 
 ## Launch a New SLURM cluster
 
-> If you are using Rancher, you can check out the compose files in the
-> `rancher` subdirecotry. 
-
 Create a new directory with a `docker-compose.yml` file:
 
 ```
@@ -77,7 +74,7 @@ services:
     stdin_open: true
 ```
 
-After that you can create and run the configured containers with command `docker-compose up -d`.
+After that you can create and run the configured containers with a command `docker-compose up -d`.
 
 For a stopping them run `docker-compose down`. 
 

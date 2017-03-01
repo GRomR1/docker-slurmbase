@@ -1,4 +1,0 @@
-slurmctld:
-  scale: 1
-slurmd:
-  scale: 4
