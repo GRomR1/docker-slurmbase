@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER Ole Weidner <ole.weidner@ed.ac.uk>
+MAINTAINER Ruslan Gainanov <gromrx1@gmail.com>
 
 ENV SLURM_VER=16.05.9
 
@@ -23,22 +23,21 @@ RUN apt-get install -y munge curl gcc make bzip2 supervisor python python-dev \
     openssh-server openssh-client \
     automake autoconf unzip \ 
     libgtk2.0-dev libglib2.0-dev \
-    mysql-client mysql-server libmysqlclient-dev \
     libhdf5-dev \
     libcurl4-openssl-dev
-
 
 
 # Download, compile and install SLURM
 RUN curl -fsL http://www.schedmd.com/download/total/slurm-${SLURM_VER}.tar.bz2 | tar xfj - -C /opt/ && \
     cd /opt/slurm-${SLURM_VER}/ && \
-    curl -fsL https://github.com/cfenoy/influxdb-slurm-monitoring/archive/master.zip -o influxdb-slurm-monitoring.zip && \
+    curl -fsL https://github.com/GRomR1/influxdb-slurm-monitoring/archive/master.zip -o influxdb-slurm-monitoring.zip && \
     unzip -qq influxdb-slurm-monitoring.zip && rm -rf influxdb-slurm-monitoring.zip && \
     sed -i '/src\/plugins\/acct_gather_profile\/none\/Makefile/a\\t\t src\/plugins\/acct_gather_profile\/influxdb\/Makefile' ./configure.ac && \
-    cp -r influxdb-slurm-monitoring/src/plugins/acct_gather_profile/influxdb/ src/plugins/acct_gather_profile/ && \
-    cp -rf influxdb-slurm-monitoring/src/plugins/acct_gather_profile/influxdb/Makefile.am src/plugins/acct_gather_profile/ && \
+    cp -r influxdb-slurm-monitoring-master/src/plugins/acct_gather_profile/influxdb/ src/plugins/acct_gather_profile/ && \
+    cp -rf influxdb-slurm-monitoring-master/src/plugins/acct_gather_profile/Makefile.am src/plugins/acct_gather_profile/ && \
+    rm -rf influxdb-slurm-monitoring-master && \
     ./autogen.sh && \
-    ./configure --with-mysql_config=/usr/bin/mysql_config --with-hdf5=yes --with-libcurl && \
+    ./configure --with-libcurl && \
     make && make install
 ADD etc/slurm/slurm.conf /usr/local/etc/slurm.conf
 ADD etc/slurm/acct_gather.conf /usr/local/etc/acct_gather.conf

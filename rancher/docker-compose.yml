@@ -1,29 +1,37 @@
 slurmctld:
+  container_name: slurmctld
   environment:
     SLURM_CLUSTER_NAME: ddhpc
     SLURM_CONTROL_MACHINE: slurmctld
-    SLURM_NODE_NAMES: slurm_slurmd_[1-4]
-  labels:
-    io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: nodetype=head
+    SLURM_NODE_NAMES: slurmd
+    INFLUXDB_HOST: influxdb
+    INFLUXDB_DATABASE_NAME: docker_slurm
   tty: true
   hostname: slurmctld
-  image: datadrivenhpc/slurmctld:latest
+  networks:
+    default:
+      aliases:
+      - slurmctld
+  image: gromr1/slurmctld
   links:
-  - slurmd:SLURM_NODES
+  - slurmd
   stdin_open: true
 
 slurmd:
+  container_name: slurmd
   environment:
     SLURM_CONTROL_MACHINE: slurmctld
     SLURM_CLUSTER_NAME: ddhpc
-    SLURM_NODE_NAMES: slurm_slurmd_[1-4]
-  labels:
-    io.rancher.container.pull_image: always
-    io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: nodetype=compute
-    io.rancher.container.hostname_override: container_name
+    SLURM_NODE_NAMES: slurmd
+    INFLUXDB_HOST: influxdb
+    INFLUXDB_DATABASE_NAME: docker_slurm
   tty: true
   hostname: slurmd
-  image: datadrivenhpc/slurmd:latest
+  networks:
+    default:
+      aliases:
+      - slurmd
+  image: gromr1/slurmd
+  depends_on:
+  - slurmctld
   stdin_open: true
